@@ -1,0 +1,27 @@
+{
+  "name": "nomad-coffee",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --exec babel-node index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.16.12",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "babel": "^6.23.0",
+    "nodemon": "^2.0.15",
+    "prisma": "^3.8.1"
+  },
+  "dependencies": {
+    "@graphql-tools/load-files": "^6.5.3",
+    "@graphql-tools/merge": "^8.2.1",
+    "apollo-server": "^3.6.2",
+    "dotenv": "^14.2.0",
+    "graphql": "^16.2.0"
+  }
+}
