@@ -28,6 +28,7 @@
     "bcrypt": "^5.0.1",
     "dotenv": "^14.2.0",
     "graphql": "^16.2.0",
+    "graphql-upload": "^13.0.0",
     "jsonwebtoken": "^8.5.1"
   }
 }
