@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { graphqlUploadExpress } from "graphql-upload";
 import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/user.util";
@@ -15,14 +16,15 @@ async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    playground: true,
-    introspection: true,
     uploads: false,
     context: async ({ req }) => {
       return {
-        loggedInUser: await getUser(req.headers.token || null),
+        loggedInUser: await getUser(req.headers.token),
       };
     },
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+    introspection: true,
+    playground: true,
   });
 
   await server.start();
@@ -31,7 +33,6 @@ async function startServer() {
 
   // This middleware should be added before calling `applyMiddleware`.
   app.use(graphqlUploadExpress());
-  app.use("/static", express.static("uploads"));
   server.applyMiddleware({ app });
 
   await new Promise((r) => app.listen({ port: PORT }, r));
