@@ -6,7 +6,7 @@ import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/user.util";
 const { finished } = require("stream/promises");
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 /*
 playground: true,
 introspection: true,
@@ -36,7 +36,7 @@ async function startServer() {
 
   await new Promise((r) => app.listen({ port: PORT }, r));
 
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  `🚀 Server ready at http://localhost:${PORT}${server.graphqlPath}`;
 }
 
 startServer();
