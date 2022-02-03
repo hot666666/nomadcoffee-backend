@@ -1,18 +1,31 @@
 import client from "../../client";
 import { protectedResolver } from "../user.util";
 import bcrypt from "bcrypt";
+import { deleteUploadedFile } from "../../shared/shared.utils";
 
 export default {
   Mutation: {
     editProfile: protectedResolver(
-      async (_, { password, avatarURL }, { loggedInUser }) => {
+      async (_, { password, avatar }, { loggedInUser }) => {
         let newPassword = null;
         let newAvatarURL = null;
         if (password) {
           newPassword = await bcrypt.hash(password, 10);
         }
-        if (avatarURL) {
-          newAvatarURL = avatarURL;
+        if (avatar) {
+          const user = await client.user.findUnique({
+            where: {
+              id: loggedInUser.id,
+            },
+            select: {
+              avatarURL: true,
+            },
+          });
+
+          if (user?.avatarURL) {
+            await deleteUploadedFile(user.avatarURL, "avatar");
+          }
+          avatarURL = await uploadToS3(avatar, loggedInUser.id, "avatar");
         }
         const updatedUser = await client.user.update({
           where: {

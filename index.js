@@ -1,73 +1,40 @@
 import "dotenv/config";
-import { ApolloServer } from "apollo-server";
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
+import { graphqlUploadExpress } from "graphql-upload";
 import { typeDefs, resolvers } from "./schema";
 import { getUser } from "./users/user.util";
-
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-  context: async ({ req }) => {
-    return {
-      loggedInUser: await getUser(req.headers.token),
-    };
-  },
-});
-
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
-
-/*
-const express = require("express");
-const { ApolloServer, gql } = require("apollo-server-express");
-const { GraphQLUpload, graphqlUploadExpress } = require("graphql-upload");
 const { finished } = require("stream/promises");
 
-const typeDefs = gql`
-  scalar Upload
-  type File {
-    filename: String!
-  }
-  type Query {
-    otherFields: Boolean!
-  }
-  type Mutation {
-    singleUpload(file: Upload!): File!
-  }
-`;
-
-const resolvers = {
-  Upload: GraphQLUpload,
-  Mutation: {
-    singleUpload: async (_, { file }) => {
-      const { createReadStream, filename } = await file;
-      //const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
-      const stream = createReadStream();
-      const out = require("fs").createWriteStream(
-        process.cwd() + "/uploads/" + filename
-      ); //newFilename);
-      console.log(process.cwd() + "/uploads/" + filename);
-      stream.pipe(out);
-      await finished(out);
-
-      return { filename };
-    },
-  },
-};
-
+const PORT = process.env.PORT || 4000;
+/*
+playground: true,
+introspection: true,
+*/
 async function startServer() {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    uploads: false,
+    context: async ({ req }) => {
+      return {
+        loggedInUser: await getUser(req.headers.token || null),
+      };
+    },
   });
 
   await server.start();
+
   const app = express();
+
+  // This middleware should be added before calling `applyMiddleware`.
   app.use(graphqlUploadExpress());
-  server.applyMiddleware({ app });
   app.use("/static", express.static("uploads"));
-  await new Promise((r) => app.listen({ port: 4000 }, r));
+  server.applyMiddleware({ app });
+
+  await new Promise((r) => app.listen({ port: PORT }, r));
+
   console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
 }
+
 startServer();
-*/
