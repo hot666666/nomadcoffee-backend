@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node index",
+    "dev": "nodemon --exec babel-node src/index --delay 2",
     "migrate": "npx prisma migrate dev",
-    "studio": "npx prisma studio"
+    "studio": "npx prisma studio",
+    "build": "babel src --out-dir build",
+    "start": "node build/index"
   },
   "keywords": [],
   "author": "",
@@ -14,12 +16,14 @@
   "devDependencies": {
     "@babel/core": "^7.16.12",
     "@babel/node": "^7.16.8",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "babel": "^6.23.0",
     "nodemon": "^2.0.15",
     "prisma": "^3.8.1"
   },
   "dependencies": {
+    "@babel/cli": "^7.17.0",
     "@graphql-tools/load-files": "^6.5.3",
     "@graphql-tools/merge": "^8.2.1",
     "@graphql-tools/schema": "^8.3.1",

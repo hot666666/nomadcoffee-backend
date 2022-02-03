@@ -1,7 +1,7 @@
 import client from "../../client";
 import { protectedResolver } from "../user.util";
 import bcrypt from "bcrypt";
-import { deleteUploadedFile } from "../../shared/shared.utils";
+import { deleteUploadedFile, uploadToS3 } from "../../shared/shared.utils";
 
 export default {
   Mutation: {
@@ -25,7 +25,7 @@ export default {
           if (user?.avatarURL) {
             await deleteUploadedFile(user.avatarURL, "avatar");
           }
-          avatarURL = await uploadToS3(avatar, loggedInUser.id, "avatar");
+          newAvatarURL = await uploadToS3(avatar, loggedInUser.id, "avatar");
         }
         const updatedUser = await client.user.update({
           where: {
