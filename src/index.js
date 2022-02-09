@@ -8,10 +8,7 @@ import { getUser } from "./users/user.util";
 const { finished } = require("stream/promises");
 
 const PORT = process.env.PORT;
-/*
-playground: true,
-introspection: true,
-*/
+
 async function startServer() {
   const server = new ApolloServer({
     typeDefs,
@@ -22,6 +19,7 @@ async function startServer() {
         loggedInUser: await getUser(req.headers.token),
       };
     },
+    // below should be omitted for real world..
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
     introspection: true,
     playground: true,
@@ -31,7 +29,6 @@ async function startServer() {
 
   const app = express();
 
-  // This middleware should be added before calling `applyMiddleware`.
   app.use(graphqlUploadExpress());
   server.applyMiddleware({ app });
 
