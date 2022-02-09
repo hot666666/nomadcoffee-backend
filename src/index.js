@@ -4,6 +4,7 @@ import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { graphqlUploadExpress } from "graphql-upload";
 import { typeDefs, resolvers } from "./schema";
+import logger from "morgan";
 import { getUser } from "./users/user.util";
 const { finished } = require("stream/promises");
 
@@ -30,6 +31,7 @@ async function startServer() {
   const app = express();
 
   app.use(graphqlUploadExpress());
+  app.use(logger("dev"));
   server.applyMiddleware({ app });
 
   await new Promise((r) => app.listen({ port: PORT }, r));

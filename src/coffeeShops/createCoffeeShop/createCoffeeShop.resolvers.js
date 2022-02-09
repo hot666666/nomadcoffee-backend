@@ -8,13 +8,20 @@ export default {
     createCoffeeShop: protectedResolver(
       async (
         _,
-        { name, latitude, longitude, category, file },
+        { name, category, latitude, longitude, file },
         { loggedInUser }
       ) => {
-        let photoUrl = null;
-        if (file) {
-          photoUrl = await uploadToS3(file, loggedInUser.id, "uploads");
+        //console.log(file);
+        let photoUrls = [];
+        if (file?.length > 0) {
+          photoUrls = await Promise.all(
+            file.map(
+              async (photo) =>
+                await uploadToS3(photo, loggedInUser.id, "uploads")
+            )
+          );
         }
+        //console.log(photoUrls);
         try {
           const newShop = await client.coffeeShop.create({
             data: {
@@ -29,9 +36,25 @@ export default {
               ...(category && {
                 categories: { connectOrCreate: processCategory(category) },
               }),
-              ...(photoUrl && { photos: { create: { url: photoUrl } } }),
             },
           });
+          if (photoUrls.length > 0) {
+            await Promise.all(
+              photoUrls.map(
+                async (url) =>
+                  await client.coffeeShopPhoto.create({
+                    data: {
+                      url,
+                      shop: {
+                        connect: {
+                          id: newShop.id,
+                        },
+                      },
+                    },
+                  })
+              )
+            );
+          }
           return {
             ok: true,
             coffeeShop: newShop,

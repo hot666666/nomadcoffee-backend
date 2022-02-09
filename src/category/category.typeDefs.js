@@ -6,7 +6,6 @@ export default gql`
     name: String!
     slug: String!
     shops(lastId: Int): [CoffeeShop]
-    totalShops: Int!
     createdAt: String!
     updatedAt: String!
   }
