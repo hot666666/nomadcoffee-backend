@@ -8,6 +8,7 @@ export default gql`
     latitude: String!
     longitude: String!
     user: User!
+    isMine: Boolean!
     categories(lastId: Int): [Category]
     photos(lastId: Int): [CoffeeShopPhoto]
     createdAt: String!

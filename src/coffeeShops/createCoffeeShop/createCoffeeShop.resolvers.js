@@ -11,7 +11,7 @@ export default {
         { name, category, latitude, longitude, file },
         { loggedInUser }
       ) => {
-        //console.log(file);
+        console.log(file);
         let photoUrls = [];
         if (file?.length > 0) {
           photoUrls = await Promise.all(
@@ -21,7 +21,7 @@ export default {
             )
           );
         }
-        //console.log(photoUrls);
+        console.log(photoUrls);
         try {
           const newShop = await client.coffeeShop.create({
             data: {

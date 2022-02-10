@@ -46,7 +46,7 @@ model Category {
 
 model CoffeeShop {
   id         Int               @id @default(autoincrement())
-  name       String
+  name       String            @unique
   latitude   String
   longitude  String
   photos     CoffeeShopPhoto[]
