@@ -91,7 +91,7 @@ export default {
               }),
             },
           });
-          if (photoUrl.length > 0) {
+          if (photoUrl?.length > 0) {
             await Promise.all(
               photoUrl.map(
                 async (url) =>

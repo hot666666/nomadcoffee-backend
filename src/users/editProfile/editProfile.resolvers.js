@@ -12,7 +12,8 @@ export default {
         if (password) {
           newPassword = await bcrypt.hash(password, 10);
         }
-        if (avatar) {
+        console.log(avatar);
+        if (avatar !== undefined) {
           const user = await client.user.findUnique({
             where: {
               id: loggedInUser.id,
@@ -21,12 +22,12 @@ export default {
               avatarURL: true,
             },
           });
-
           if (user?.avatarURL) {
             await deleteUploadedFile(user.avatarURL, "avatar");
           }
-          newAvatarURL = await uploadToS3(avatar, loggedInUser.id, "avatar");
+          newAvatarURL = await uploadToS3(avatar[0], loggedInUser.id, "avatar");
         }
+        console.log(newAvatarURL);
         const updatedUser = await client.user.update({
           where: {
             id: loggedInUser.id,

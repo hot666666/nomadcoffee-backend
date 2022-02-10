@@ -6,6 +6,6 @@ export default gql`
     error: String
   }
   type Mutation {
-    editProfile(password: String, avatar: Upload): EditProfileResult!
+    editProfile(password: String, avatar: [Upload]): EditProfileResult!
   }
 `;
