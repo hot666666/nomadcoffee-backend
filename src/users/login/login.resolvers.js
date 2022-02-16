@@ -21,6 +21,7 @@ export default {
           };
         }
         const token = await jwt.sign({ id: user.id }, process.env.SECRET_KEY);
+        console.log(`${user.id}가 로그인함`);
         return {
           ok: true,
           token,
